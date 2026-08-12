@@ -22,7 +22,10 @@
 
 ＊CRUD
 
--
+- Todoの表示 TodoController@index
+- Todoの追加 TodoController@store
+- Todoの更新 TodoController@update
+- Todoの削除 TodoController@destroy
 
 ### 3. バリデーション・テスト要件書き出し
 
@@ -217,7 +220,7 @@ alias sail="./vendor/bin/sail"
 
 旧教材の提供ファイルを新教材環境で使用するため、以下の手順で修正した。
 
-1.  Bladeファイルを`@vite`ディレクティブ使用のコードに書き換え
+1.  Bladeファイルを`@vite`ディレクティブ使用のコードに書き換え<br>
     `app.blade.php`
 
         ```html
@@ -235,14 +238,19 @@ alias sail="./vendor/bin/sail"
 3.  `vite.config.js`にCSSファイルを登録する
 
 ```php
-plugins: [
-laravel({
-   input: [
-       'resources/css/app.css',
-       'resources/css/common.css', //←追加
-       'resources/css/index.css', //←追加
-       'resources/css/sanitize.css', //←追加
-       'resources/js/app.js'],
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: [
+                'resources/css/app.css',
+                'resources/css/common.css',
+                'resources/css/index.css',
+                'resources/css/sanitize.css',
+                'resources/js/app.js'],
+            refresh: true,
+        }),
+    ],
+});
 ```
 
 ### 6. Git/GitHub準備とIssue登録
