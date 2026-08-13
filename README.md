@@ -94,7 +94,7 @@ docker run --rm \
 
 ```bash
 # プロジェクトディレクトリに移動
-cd contact-form
+cd Todo
 
 # Laravel Sailをインストール
 docker run --rm \
@@ -189,6 +189,118 @@ alias sail="./vendor/bin/sail"
     ```
 
 #### 5. envファイルとphpMyAdminの設定
+
+1.  .envファイルの確認
+    `.env`ファイルを開き、データベース接続情報が以下と一致していることを確認する
+
+```php
+ DB_CONNECTION=mysql
+ DB_HOST=mysql
+ DB_PORT=3306
+ DB_DATABASE=laravel
+ DB_USERNAME=sail
+ DB_PASSWORD=password
+```
+
+2.  `compose.yaml`を開き、`mysql`サービスの後に以下の設定を追加して保存する
+
+    ```php
+     phpmyadmin:
+         image: 'phpmyadmin:latest'
+         ports:
+             - '${FORWARD_PHPMYADMIN_PORT:-8080}:80'
+         environment:
+             PMA_HOST: mysql
+             PMA_USER: '${DB_USERNAME}'
+             PMA_PASSWORD: '${DB_PASSWORD}'
+         networks:
+             - sail
+         depends_on:
+             - mysql
+    ```
+
+#### 6. Sailの起動
+
+1. Sailの再起動
+
+    ```bash
+    sail down
+    sail up -d
+    ```
+
+2. アプリケーションキーの生成
+    ```bash
+    sail artisan key:generate
+    ```
+
+#### 7. 動作確認
+
+1. Laravelの動作確認
+   ブラウザで`http://localhost`にアクセスする。
+   Laravelのウェルカムページが表示されることを確認
+
+2. phpMyAdminの動作確認
+   ブラウザで`http://localhost:8080`にアクセスする。
+   phpMyAdminが表示されることを確認
+
+3. マイグレーションの実行
+    ```bash
+    sail artisan migrate
+    ```
+    phpMyAdminで`users`テーブルが作られていることを確認する
+
+---
+
+### 4. 環境構築 (`git clone`から環境構築する場合)
+
+#### 1. git cloneを実行
+
+Dockerが起動していることを確認<br>
+
+```bash
+# ホームディレクトリに移動
+cd ~
+
+# git cloneを実行
+git clone https://github.com/yuna-genma/Todo.git
+```
+
+#### 2. セットアップ
+
+```bash
+# プロジェクトディレクトリに移動
+cd Todo
+
+# Composerパッケージをインストール
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
+    laravelsail/php82-composer:latest \
+    composer install
+
+# 環境設定ファイルをコピー
+cp .env.example .env
+
+# Sailを起動
+./vendor/bin/sail up -d
+```
+
+#### 3. エイリアス設定
+
+```bash
+echo "alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'" >> ~/.bashrc
+exec $SHELL
+```
+
+※↓このコードでもエイリアス設定できるが、 Laravelプロジェクトのルートディレクトリ（一番上の階層）にいる時しか動かないため注意が必要
+
+```bash
+alias sail="./vendor/bin/sail"
+```
+
+#### 4. envファイルとphpMyAdminの設定
 
 1.  .envファイルの確認
     `.env`ファイルを開き、データベース接続情報が以下と一致していることを確認する
