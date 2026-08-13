@@ -35,7 +35,13 @@
 
 ＊テスト要件
 
-1.
+1. ユーザーはタスク一覧を取得できる
+2. ユーザーはタスクを作成できる
+3. ユーザーはタスクを更新できる
+4. ユーザーはタスクを削除できる
+5. タスク内容が空だとバリデーションエラーになる
+6. タスク内容は25文字まで入力できる
+7. タスク内容が26文字以上だとバリデーションエラーになる
 
 ### 4. 環境構築
 
@@ -287,3 +293,11 @@ export default defineConfig({
     </php>
     ```
 2. ファクトリの作成
+3. デフォルトのテストファイルを削除
+    ```bash
+    # デフォルトのExampleTestを削除
+    rm tests/Feature/ExampleTest.php
+    rm tests/Unit/ExampleTest.php
+    # tests/Unitディレクトリを維持するため、.gitkeepを作成
+    touch tests/Unit/.gitkeep
+    ```
