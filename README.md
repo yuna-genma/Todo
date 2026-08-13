@@ -300,10 +300,71 @@ exec $SHELL
 alias sail="./vendor/bin/sail"
 ```
 
-#### 4. envファイルとphpMyAdminの設定
+#### 4. フロントエンドのセットアップ
+
+1. Sailの起動
+
+    ```bash
+    sail up -d
+    ```
+
+2. NPM依存パッケージのインストール
+
+    ```bash
+    sail npm install
+    ```
+
+3. Tailwind CSSのインストール
+
+    ```bash
+    sail npm install -D tailwindcss@^3.4.0 postcss autoprefixer
+    ```
+
+4. 設定ファイルの生成
+
+    ```bash
+    sail npx tailwindcss init -p
+    ```
+
+5. Tailwind CSSのテンプレートパス設定
+   `tailwind.config.js`を開き、`content`プロパティを以下のように設定
+
+    ```php
+    /** @type {import('tailwindcss').Config} */
+    export default {
+    content: [
+     "./resources/**/*.blade.php",
+     "./resources/**/*.js",
+     "./resources/**/*.vue",
+    ],
+    theme: {
+     extend: {},
+    },
+    plugins: [],
+    }
+    ```
+
+6. CSSファイルにTailwindディレクティブを追加
+   `resources/css/app.css`の中身を以下の3行に置き換える
+
+    ```php
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    ```
+
+7. Vite開発サーバーの起動
+   新しいターミナルを開いて実行する。
+   ※このコマンドは開発中、常に実行したままにする。
+    ```bash
+    sail npm run dev
+    ```
+
+#### 5. envファイルとphpMyAdminの設定
 
 1.  .envファイルの確認
-    `.env`ファイルを開き、データベース接続情報が以下と一致していることを確認する
+    `.env`ファイルを開き、データベース接続情報が以下と一致していることを確認する<br>
+    一致しない場合は以下の情報に書き換える
 
 ```php
  DB_CONNECTION=mysql
@@ -314,7 +375,8 @@ alias sail="./vendor/bin/sail"
  DB_PASSWORD=password
 ```
 
-2.  `compose.yaml`を開き、`mysql`サービスの後に以下の設定を追加して保存する
+2.  `compose.yaml`を開き、`mysql`サービスの後に以下の設定と一致するか確認する。<br>
+    一致しない場合は以下の情報を追加して保存する。
 
     ```php
      phpmyadmin:
