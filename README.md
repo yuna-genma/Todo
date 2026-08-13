@@ -262,3 +262,28 @@ export default defineConfig({
 ### 9. CRUD機能の実装
 
 ### 10. テスト
+
+#### テスト環境のセットアップ
+
+1. phpunit.xml の設定
+   ファイル：`phpunit.xml`
+   修正箇所<br>
+   `<php>`セクション内で以下の2点を修正する。
+    1. `DB_CONNECTION`行を追加
+    2. `DB_DATABASE`の値を変更
+       修正後の`<php>`セクション全体
+    ```php
+    <php>
+    <env name="APP_ENV" value="testing"/>
+    <env name="BCRYPT_ROUNDS" value="4"/>
+    <env name="CACHE_DRIVER" value="array"/>
+    <env name="DB_CONNECTION" value="sqlite"/> <!-- ← 追加 -->
+    <env name="DB_DATABASE" value=":memory:"/> <!-- ← 値を変更 -->
+    <env name="MAIL_MAILER" value="array"/>
+    <env name="PULSE_ENABLED" value="false"/>
+    <env name="QUEUE_CONNECTION" value="sync"/>
+    <env name="SESSION_DRIVER" value="array"/>
+    <env name="TELESCOPE_ENABLED" value="false"/>
+    </php>
+    ```
+2. ファクトリの作成
